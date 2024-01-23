@@ -31,13 +31,13 @@ public class PlayerControl : MonoBehaviour {
 
     private void Update() {
         Vector3 movementInput = _movementAction.ReadValue<Vector2>();
-        Vector3 movement = new Vector3(movementInput.x, 0, movementInput.y);
+        Vector3 movement = new Vector3(movementInput.x, 0, movementInput.y).normalized;
         _controller.Move(movement * (_speed * Time.deltaTime));
 
-        if (movement.magnitude >= 0.1f) {
-            Quaternion lookRotation = Quaternion.LookRotation(movement);
-            float lookAngle = lookRotation.eulerAngles.y;
-            float angle = Mathf.SmoothDamp(transform.eulerAngles.y, lookAngle, ref _turnSmoothVelocity, _turnSmoothTime);
+        if (movementInput.magnitude >= 0.1f) {
+            float targetAngle = Mathf.Atan2(movement.x, movement.z) * Mathf.Rad2Deg;
+            // Debug.Log(targetAngle);
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _turnSmoothVelocity, _turnSmoothTime);
             transform.rotation = Quaternion.Euler(0, angle, 0);
         }
     }
