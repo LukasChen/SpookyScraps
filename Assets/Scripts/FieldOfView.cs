@@ -1,7 +1,11 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class FieldOfView : MonoBehaviour {
+
+    [SerializeField] private LayerMask _layerMask;
+
+    private float _fov = 90f;
+    private float _startingAngle = 0;
 
     private Mesh _mesh;
     
@@ -11,12 +15,11 @@ public class FieldOfView : MonoBehaviour {
     }
 
     private void Update() {
-        float fov = 90f;
         Vector3 origin = Vector3.zero;
         int rayCount = 100;
         float currentAngle = 0f;
-        float angleIncrement = fov / rayCount;
-        float viewDistance = 50f;
+        float angleIncrement = _fov / rayCount;
+        float viewDistance = 20f;
 
         Vector3[] vertices = new Vector3[rayCount + 1 + 1];
         Vector2[] uv = new Vector2[vertices.Length];
@@ -29,13 +32,15 @@ public class FieldOfView : MonoBehaviour {
         for (int i = 1; i <= rayCount; i++) {
             Vector3 ang2Vec = new Vector3(Mathf.Sin(Mathf.Deg2Rad * currentAngle), 0,
                 Mathf.Cos(Mathf.Deg2Rad * currentAngle));
+            Vector3 ang2VecGlobal = new Vector3(Mathf.Sin(Mathf.Deg2Rad * (currentAngle + transform.eulerAngles.y)), 0,
+                Mathf.Cos(Mathf.Deg2Rad * (currentAngle + transform.eulerAngles.y)));
             Vector3 vertex;
 
-            Physics.Raycast(origin, ang2Vec, out var hit, viewDistance);
+            Physics.Raycast(transform.position, ang2VecGlobal, out var hit, viewDistance, _layerMask);
             if (hit.collider == null) {
                 vertex = origin + ang2Vec  * viewDistance;
             } else {
-                vertex = hit.point;
+                vertex = hit.point - new Vector3(Mathf.Sin(Mathf.Deg2Rad * transform.eulerAngles.y), 0, Mathf.Cos(Mathf.Deg2Rad * transform.eulerAngles.y)) - transform.position;
             }
             
             vertices[i] = vertex;
