@@ -30,11 +30,12 @@ public class PlayerControl : MonoBehaviour {
     }
 
     private void Update() {
-        Vector3 movementInput = _movementAction.ReadValue<Vector2>();
+        Vector2 movementInput = _movementAction.ReadValue<Vector2>();
         Vector3 movement = new Vector3(movementInput.x, 0, movementInput.y).normalized;
         _controller.Move(movement * (_speed * Time.deltaTime));
 
         if (movementInput.magnitude >= 0.1f) {
+            Debug.Log(movement);
             float targetAngle = Mathf.Atan2(movement.x, movement.z) * Mathf.Rad2Deg;
             // Debug.Log(targetAngle);
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _turnSmoothVelocity, _turnSmoothTime);
