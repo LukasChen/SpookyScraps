@@ -17,7 +17,7 @@ public class FieldOfView : MonoBehaviour {
     private void Update() {
         Vector3 origin = Vector3.zero;
         int rayCount = 100;
-        float currentAngle = 0f;
+        float currentAngle = -(_fov / 2);
         float angleIncrement = _fov / rayCount;
         float viewDistance = 20f;
 
@@ -34,13 +34,17 @@ public class FieldOfView : MonoBehaviour {
                 Mathf.Cos(Mathf.Deg2Rad * currentAngle));
             Vector3 ang2VecGlobal = new Vector3(Mathf.Sin(Mathf.Deg2Rad * (currentAngle + transform.eulerAngles.y)), 0,
                 Mathf.Cos(Mathf.Deg2Rad * (currentAngle + transform.eulerAngles.y)));
+
+            Debug.Log(AngleToDirection(transform.eulerAngles.y));
+
             Vector3 vertex;
 
             Physics.Raycast(transform.position, ang2VecGlobal, out var hit, viewDistance, _layerMask);
             if (hit.collider == null) {
                 vertex = origin + ang2Vec  * viewDistance;
             } else {
-                vertex = hit.point - new Vector3(Mathf.Sin(Mathf.Deg2Rad * transform.eulerAngles.y), 0, Mathf.Cos(Mathf.Deg2Rad * transform.eulerAngles.y)) - transform.position;
+                Vector3 localizedPos = hit.point - transform.position;
+                vertex = Quaternion.Euler(new Vector3(transform.eulerAngles.x, -transform.eulerAngles.y, transform.eulerAngles.z)) * localizedPos;
             }
             
             vertices[i] = vertex;
@@ -58,4 +62,8 @@ public class FieldOfView : MonoBehaviour {
         _mesh.uv = uv;
         _mesh.triangles = indices;
     }
+
+    private Vector3 AngleToDirection(float angle) =>
+        new Vector3(Mathf.Sin(Mathf.Deg2Rad * angle), 0,
+                Mathf.Cos(Mathf.Deg2Rad * angle));
 }
