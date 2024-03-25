@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/main.uss?fileID=7433441132597879392&amp;guid=ffa0ac97db668fa43805892f6a995f7c&amp;type=3#main" />
+    <ui:VisualElement name="VisualElement" style="flex-grow: 1; flex-direction: column-reverse; align-items: center;">
+        <ui:VisualElement name="inventory-row" focusable="false" style="flex-direction: row; flex-wrap: nowrap; max-width: none; align-items: auto; min-width: auto; height: 256px; width: auto; margin-bottom: 1%;">
+           
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

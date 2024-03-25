@@ -1,0 +1,7 @@
+.inventory-item {
+    -unity-text-align: upper-center;
+}
+
+.inventory-text {
+    font-size: 20px;
+}
