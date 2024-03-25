@@ -35,7 +35,6 @@ public class FieldOfView : MonoBehaviour {
             Vector3 ang2VecGlobal = new Vector3(Mathf.Sin(Mathf.Deg2Rad * (currentAngle + transform.eulerAngles.y)), 0,
                 Mathf.Cos(Mathf.Deg2Rad * (currentAngle + transform.eulerAngles.y)));
 
-            Debug.Log(AngleToDirection(transform.eulerAngles.y));
 
             Vector3 vertex;
 

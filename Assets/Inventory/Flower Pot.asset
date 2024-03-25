@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ecf9a975f074e168a377dc1997f23e7, type: 3}
+  m_Name: Flower Pot
+  m_EditorClassIdentifier: 
+  id: 0
+  name: Flower Pot
+  Icon: {fileID: 21300000, guid: 776d0bff78ede0a4cbfb0450159eb47d, type: 3}
+  prefab: {fileID: 1649763853201041741, guid: 3d2ab1269655b5e408a7618c15033ce1, type: 3}
