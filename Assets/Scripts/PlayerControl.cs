@@ -1,12 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Numerics;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Quaternion = UnityEngine.Quaternion;
-using Vector2 = UnityEngine.Vector2;
-using Vector3 = UnityEngine.Vector3;
 
 public class PlayerControl : MonoBehaviour {
     [SerializeField] private float _speed;
@@ -15,10 +11,10 @@ public class PlayerControl : MonoBehaviour {
     [SerializeField] private float _runAcceleration = 1;
     [SerializeField] private float _turnSmoothTime;
     
+    [SerializeField] private InventorySystemSO _inventory; 
     
     private PlayerInputActions _inputs;
     private CharacterController _controller;
-    private InventoryManager _inventory;
     private Animator _animator;
 
     private InputAction _movementAction;
@@ -31,6 +27,7 @@ public class PlayerControl : MonoBehaviour {
        _inputs.Enable();
        _movementAction = _inputs.Player.Move;
        _inputs.Player.Interact.performed += OnInteract;
+       _inventory.Clear();
     }
 
     private void OnDisable() {
@@ -39,7 +36,6 @@ public class PlayerControl : MonoBehaviour {
     void Start() {
         _controller = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
-        _inventory = GetComponent<InventoryManager>();
     }
 
     private void Update() {

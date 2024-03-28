@@ -1,15 +1,16 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 public class PlayerUI : MonoBehaviour {
-    [SerializeField] private InventoryDataEventChannelSO _addInventory;
+    [SerializeField] private InventorySystemSO _inventoryManager;
     
     private VisualElement _root;
     private VisualElement _inventory;
 
     private void OnEnable() {
-        _addInventory.OnEventRaised += AddItem;
+        _inventoryManager.OnItemAdd += AddItem;
     }
 
     private void Start() {
@@ -21,7 +22,17 @@ public class PlayerUI : MonoBehaviour {
     }
 
     private void AddItem(InventoryItemData item) {
-        _inventory.Add(BuildItem(item));
+        VisualElement itemElement = BuildItem(item);
+        if (_inventoryManager.InventoryItems.Count == 1) {
+        }
+        
+        itemElement.AddToClassList("active");
+        Debug.Log(_inventoryManager.InventoryItems.Count);
+        _inventory.Add(itemElement);
+    }
+
+    public void OnScrollWheel(InputAction.CallbackContext ctx) {
+        Debug.Log(ctx.ReadValue<Vector2>());
     }
 
     private VisualElement BuildItem(InventoryItemData itemData) {

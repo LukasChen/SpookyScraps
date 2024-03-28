@@ -5,3 +5,8 @@
 .inventory-text {
     font-size: 20px;
 }
+
+.active {
+    border-width: 5px;
+    border-color: red;
+}
