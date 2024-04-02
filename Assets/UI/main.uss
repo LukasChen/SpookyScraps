@@ -1,12 +1,25 @@
 .inventory-item {
     -unity-text-align: upper-center;
+    transition: all 0.1s ease-in-out;
 }
-
+.inventory-imgwrapper {
+    position:relative;
+}
+.inventory-select {
+    position:absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: all 0.15s ease-in-out;
+    opacity: 0.5;
+}
 .inventory-text {
     font-size: 20px;
 }
-
 .active {
-    border-width: 5px;
-    border-color: red;
+    color: #2196F3;
+}
+.active .inventory-select {
+    opacity: 1;
 }

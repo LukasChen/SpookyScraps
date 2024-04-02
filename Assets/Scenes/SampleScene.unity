@@ -626,7 +626,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75fe46da657d4011ad1bc55958107843, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _addInventory: {fileID: 11400000, guid: 44294a97eba537740b4b3b581a8b8f65, type: 2}
+  _inventoryManager: {fileID: 11400000, guid: 94f38345934caae498f21e260969c10f, type: 2}
 --- !u!114 &252335223
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -741,7 +741,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96b002279162497989a84a9f95b16cb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _updateInventory: {fileID: 11400000, guid: 44294a97eba537740b4b3b581a8b8f65, type: 2}
 --- !u!1 &296595101
 GameObject:
   m_ObjectHideFlags: 0
@@ -1086,7 +1085,7 @@ MonoBehaviour:
   _acceleration: 3
   _runAcceleration: 5
   _turnSmoothTime: 0.2
-  _inventory: {fileID: 252335224}
+  _inventory: {fileID: 11400000, guid: 94f38345934caae498f21e260969c10f, type: 2}
 --- !u!143 &666407381
 CharacterController:
   m_ObjectHideFlags: 0

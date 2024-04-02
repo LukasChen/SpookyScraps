@@ -27,8 +27,11 @@ public class PlayerControl : MonoBehaviour {
        _inputs.Enable();
        _movementAction = _inputs.Player.Move;
        _inputs.Player.Interact.performed += OnInteract;
+       _inputs.Player.Drop.performed += OnDrop;
        _inventory.Clear();
     }
+
+    
 
     private void OnDisable() {
         _inputs.Disable();
@@ -77,5 +80,13 @@ public class PlayerControl : MonoBehaviour {
                 item.HandlePickup(_inventory);
             }
         }
+    }
+    
+    private void OnDrop(InputAction.CallbackContext obj) {
+        // TODO: Check if terrain good for dropping
+
+        var discardItem = _inventory.CurrentItem;
+        Instantiate(discardItem.prefab, transform.position, Quaternion.identity);
+        _inventory.RemoveItem(_inventory.SelectedIndex);
     }
 }
