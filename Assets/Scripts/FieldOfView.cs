@@ -56,7 +56,7 @@ public class FieldOfView : MonoBehaviour {
 
             currentAngle += angleIncrement;
         }
-
+        
         _mesh.vertices = vertices;
         _mesh.uv = uv;
         _mesh.triangles = indices;
