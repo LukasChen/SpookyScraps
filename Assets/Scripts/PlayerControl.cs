@@ -75,7 +75,7 @@ public class PlayerControl : MonoBehaviour {
     }
 
     private void OnInteract(InputAction.CallbackContext ctx) {
-        if (Physics.SphereCast(transform.position, 0.5f, transform.forward, out var hit, 3)) {
+        if (Physics.SphereCast(transform.position, 1, transform.forward, out var hit, 0.5f)) {
             if (hit.transform.TryGetComponent<InventoryItem>(out InventoryItem item)) {
                 item.HandlePickup(_inventory);
             }

@@ -106,7 +106,7 @@ Shader "GPUMan/ConeOfSightURP" {
 					float4 wpos = mul(unity_CameraToWorld, vpos);
 
 					// Discard point if is a vertical surface
-					clip((dot(normalize(ddy(wpos.xyz)), float3(0, 1, 0)) > 0.45) ? -1 : 1);
+					//clip((dot(normalize(ddy(wpos.xyz)), float3(0, 1, 0)) > 0.45) ? -1 : 1);
 
 					float3 opos = mul(unity_WorldToObject, wpos);;
 					opos.y = 0;

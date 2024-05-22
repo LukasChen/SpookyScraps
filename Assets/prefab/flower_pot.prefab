@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1001451734389508248}
   - component: {fileID: 8291912623645043381}
   - component: {fileID: 5407288663683823555}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: flower_pot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -60,7 +60,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
+  m_RenderingLayerMask: 2
   m_RendererPriority: 0
   m_Materials:
   - {fileID: -6478536213147159724, guid: 941b85881955c3b4bbb276acdc95856c, type: 3}
