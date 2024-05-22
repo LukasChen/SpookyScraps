@@ -108,7 +108,7 @@ Shader "GPUMan/ConeOfSightURP" {
 					// Discard point if is a vertical surface
 					clip((dot(normalize(ddy(wpos.xyz)), float3(0, 1, 0)) > 0.45) ? -1 : 1);
 
-					float3 opos = mul(unity_WorldToObject, wpos);
+					float3 opos = mul(unity_WorldToObject, wpos);;
 					opos.y = 0;
 
 					// Discard hit point if it is outside the box
@@ -119,6 +119,10 @@ Shader "GPUMan/ConeOfSightURP" {
 					float distFromCenter = length(pos2D);
 					float obstacleAlpha = getObstacleAlpha(wpos); // 0 if occluded, 1 if not
 					float alpha = getAngleAlpha(pos2D);
+
+					// clip only clips when value is below 0, so first offset alpha by 0.5 so that 0 means half transparent
+					// then inverse the obstacleAlpha so it's 1 if occluded so that it can be subtracted
+					clip(alpha - 0.5 - (1 - obstacleAlpha));
 					
 					// Cone stripes
 					//float intervals = _ViewIntervals > 0 ? (distFromCenter % _ViewIntervals) : 0;
@@ -126,6 +130,7 @@ Shader "GPUMan/ConeOfSightURP" {
 
 					float4 col = obstacleAlpha > 0 ? _Color : _NonVisibleColor;
 					return  saturate(float4(col.rgb, alpha * col.a));
+					// return float4(1, 1, 1, 0.5);
 				}
 				ENDHLSL
 			}
