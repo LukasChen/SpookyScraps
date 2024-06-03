@@ -36,17 +36,19 @@ public class PlayerUI : MonoBehaviour {
     
     private void RemoveItem(int index) {
         _inventory.Query<VisualElement>("inventory-item").AtIndex(index).RemoveFromHierarchy();
+        ScrollInventory(-1);
     }
 
     public void OnScrollWheel(InputAction.CallbackContext ctx) {
-        float wheel = ctx.ReadValue<Vector2>().y;
-        if (wheel == 0 || _inventoryManager.InventoryCount == 0) return;
-        if (wheel > 0) {
-            _inventoryManager.SelectedIndex = (_inventoryManager.SelectedIndex + 1) % _inventoryManager.InventoryCount;
-        }
-        else {
-            _inventoryManager.SelectedIndex = (_inventoryManager.SelectedIndex + _inventoryManager.InventoryCount - 1) % _inventoryManager.InventoryCount;
-        }
+        int wheel = (int)ctx.ReadValue<Vector2>().y;
+        int direction = Mathf.Clamp(wheel, -1, 1);
+        ScrollInventory(direction);
+    }
+
+    private void ScrollInventory(int direction) {
+        if (direction == 0 || _inventoryManager.InventoryCount == 0) return;
+        _inventoryManager.SelectedIndex = 
+            (_inventoryManager.SelectedIndex + _inventoryManager.InventoryCount + direction) % _inventoryManager.InventoryCount;
 
         SetItemActive();
     }

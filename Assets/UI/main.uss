@@ -1,6 +1,7 @@
 .inventory-item {
     -unity-text-align: upper-center;
     transition: all 0.1s ease-in-out;
+    margin-right: 15px;
 }
 .inventory-imgwrapper {
     position:relative;
