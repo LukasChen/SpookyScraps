@@ -15,6 +15,7 @@ public class PlayerControl : MonoBehaviour {
     [FormerlySerializedAs("_groundLayer")] [SerializeField] public LayerMask groundLayer;
     [FormerlySerializedAs("_cam")] [SerializeField] public Camera cam;
     [SerializeField] private float _inputSmoothSpeed;
+    [SerializeField] public BoolDataEventChannelSO ToggleLaser;
     
     [FormerlySerializedAs("_inventory")] [SerializeField] public InventorySystemSO inventory; 
     
@@ -28,90 +29,45 @@ public class PlayerControl : MonoBehaviour {
     private float _turnSmoothVelocity;
     private Vector2 _inputSmoothVelocity;
     public Vector2 CurrentInput { get; private set; }
+    public bool HasInputThisFrame => CurrentInput.magnitude >= 0.1f;
     public Vector3 MoveVelocity { get; private set; }
     
     public float CurrentAngle { get; private set; }
 
     // State
     public PlayerBaseState CurrentState;
-    public PlayerNormalState normalState;
-    public PlayerAimState aimState;
-
-    public void SwitchState(PlayerBaseState newState) {
-        CurrentState?.ExitState();
-        CurrentState = newState;
-        newState.EnterState();
-    }
+    public PlayerNormalState NormalState;
+    public PlayerAimState AimState;
 
     private void OnEnable() {
        Inputs = new PlayerInputActions();
        Inputs.Enable();
-       
-       // Inputs
-       // Inputs.Player.Interact.performed += OnInteract;
-       // Inputs.Player.Drop.performed += OnDrop;
-       // Inputs.Player.Aim.started += OnAim;
-       // Inputs.Player.Aim.canceled += OnAim;
        inventory.Clear();
     }
     
 
     private void OnDisable() {
        Inputs.Disable();
-       // Inputs.Player.Interact.performed -= OnInteract;
-       // Inputs.Player.Drop.performed -= OnDrop;
-       // Inputs.Player.Aim.started -= OnAim;
-       // Inputs.Player.Aim.canceled -= OnAim;
     }
     private void Start() {
         Controller = GetComponent<CharacterController>();
         Animator = GetComponent<Animator>();
 
-        normalState = new PlayerNormalState(this);
-        aimState = new PlayerAimState(this);
-        SwitchState(normalState);
+        NormalState = new PlayerNormalState(this);
+        AimState = new PlayerAimState(this);
+        SwitchState(NormalState);
     }
 
     private void Update() {
-        // Vector2 movementInput = movementAction.ReadValue<Vector2>();
-        // Vector3 movement = new Vector3(movementInput.x, 0, movementInput.y).normalized;
-        // bool isRunning = Inputs.Player.Sprint.ReadValue<float>() == 1;
-        //
-        // float acceleration = isRunning ? runAcceleration : this.acceleration;
-        // float maxSpeed = isRunning ? runSpeed : speed;
-        
-        // if (movementInput.magnitude >= 0.1f) {
-        //     if (!isAiming) 
-        //         LookDir(new Vector2(movementInput.x, movement.z));
-        //     
-        //     if (velocity > speed && !isRunning) {
-        //         velocity = Mathf.Clamp(velocity - acceleration * Time.deltaTime,0, runSpeed);
-        //     }
-        //     else {
-        //         velocity = Mathf.Clamp(velocity + acceleration * 2 * Time.deltaTime, 0, maxSpeed);
-        //     }
-        // }
-        // else {
-        //     velocity = Mathf.Clamp(velocity - acceleration * 2 * Time.deltaTime,0, runSpeed);
-        // }
-        
         CurrentState.UpdateState();
-
-        // if (isAiming) {
-        //     var (success, mouseWorldPos) = GetWorldMousePos();
-        //     if (success) {
-        //         Vector3 targetDir = mouseWorldPos - transform.position;
-        //         Debug.Log(mouseWorldPos);
-        //         LookDir(new Vector2(targetDir.x, targetDir.z));
-        //     }
-        // }
-        
-        // float animatorVel = velocity / runSpeed;
-        // animator.SetFloat("velocityZ", animatorVel);
-        //
-        // Vector3 move = new Vector3(movement.x, Physics.gravity.y, movement.z);
-        // controller.Move(move * (velocity * Time.deltaTime));
     }
+    
+    public void SwitchState(PlayerBaseState newState) {
+        CurrentState?.ExitState();
+        CurrentState = newState;
+        newState.EnterState();
+    }
+
 
     public void ReadMovementInput() {
         Vector2 movementInput = Inputs.Player.Move.ReadValue<Vector2>();
@@ -119,8 +75,8 @@ public class PlayerControl : MonoBehaviour {
         CurrentInput = Vector2.SmoothDamp(CurrentInput, movement, ref _inputSmoothVelocity, _inputSmoothSpeed);
     }
 
-    public void CalculateMoveVelocity(bool hasMovementInput,float currentMaxSpeed, float acceleration) {
-        if (hasMovementInput && Velocity < currentMaxSpeed) {
+    public void CalculateMoveVelocity(float currentMaxSpeed, float acceleration) {
+        if (CurrentInput.magnitude >= 0.1f && Velocity < currentMaxSpeed) {
            Velocity = Mathf.Clamp(Velocity + acceleration * Time.deltaTime, 0, currentMaxSpeed);
         }
         else {
@@ -133,6 +89,12 @@ public class PlayerControl : MonoBehaviour {
         Controller.Move(MoveVelocity * Time.deltaTime);
     }
 
+    public void SimpleMove(float currentMaxSpeed, float acceleration) {
+        ReadMovementInput();
+        CalculateMoveVelocity(currentMaxSpeed, acceleration);
+        Move();
+    }
+
 
     public void LookDir(Vector2 direction) {
          float targetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
@@ -140,22 +102,4 @@ public class PlayerControl : MonoBehaviour {
          CurrentAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _turnSmoothVelocity, turnSmoothTime);
          transform.rotation = Quaternion.Euler(0, CurrentAngle, 0);
     }
-
-    
-
-    // private void OnAim(InputAction.CallbackContext ctx) {
-    //     if (AimCoroutine != null)
-    //         StopCoroutine(AimCoroutine);
-    //     isAiming = ctx.started;
-    //     int targetWeight = isAiming ? 1 : 0;
-    //     AimCoroutine = AnimateAim(targetWeight, 0.25f);
-    //     StartCoroutine(AimCoroutine);
-    // }
-    //
-    // private IEnumerator AnimateAim(float targetWeight, float duration) {
-    //     float original = animator.GetLayerWeight(1);
-    //     yield return CoroutineUtils.Lerp(duration, t => {
-    //         animator.SetLayerWeight(1, Mathf.Lerp(original, targetWeight, t));
-    //     });
-    // }
 }

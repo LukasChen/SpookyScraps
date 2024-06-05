@@ -16,7 +16,7 @@ public class PlayerNormalState : PlayerBaseState {
     }
 
     private void SwitchToAimState(InputAction.CallbackContext obj) {
-        player.SwitchState(player.aimState);
+        player.SwitchState(player.AimState);
     }
 
     public override void ExitState() {
@@ -31,16 +31,14 @@ public class PlayerNormalState : PlayerBaseState {
         float acceleration = isRunning ? player.runAcceleration : player.acceleration;
         float maxSpeed = isRunning ? player.runSpeed : player.speed;
 
-        player.ReadMovementInput();
-        bool hasMovementInput = player.CurrentInput.magnitude >= 0.1f;
-        if (hasMovementInput) {
+        player.SimpleMove(maxSpeed, acceleration);
+        
+        if (player.HasInputThisFrame) {
             player.LookDir(player.CurrentInput);
         }
-        player.CalculateMoveVelocity(hasMovementInput, maxSpeed, acceleration);
         
         float animatorVel = player.LocalVelocity.z / player.runSpeed;
         player.Animator.SetFloat("velocityZ", animatorVel);
-        player.Move();
     }
     
     private void OnInteract(InputAction.CallbackContext ctx) {

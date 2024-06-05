@@ -6,7 +6,6 @@ public class InventoryDataEventChannelSO : ScriptableObject {
     public UnityAction<InventoryItemData> OnEventRaised;
 
     public void RaiseEvent(InventoryItemData data) {
-        if (OnEventRaised != null)
-            OnEventRaised.Invoke(data);
+        OnEventRaised?.Invoke(data);
     }
 }

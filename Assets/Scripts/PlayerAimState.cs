@@ -6,8 +6,7 @@ public class PlayerAimState : PlayerBaseState {
 
     private IEnumerator _aimCoroutine;
     
-    public PlayerAimState(PlayerControl player) : base(player) {
-    }
+    public PlayerAimState(PlayerControl player) : base(player) { }
 
     public override void UpdateState() {
         var (success, mouseWorldPos) = GetWorldMousePos();
@@ -17,9 +16,7 @@ public class PlayerAimState : PlayerBaseState {
         }
         
         
-        player.ReadMovementInput();
-        player.CalculateMoveVelocity(player.CurrentInput.magnitude >= 0.1f,player.speed, player.acceleration);
-        player.Move();
+        player.SimpleMove(player.speed, player.acceleration);
 
         float animatorXVel = player.LocalVelocity.x / player.speed;
         float animatorZVel = player.LocalVelocity.z / player.speed;
@@ -29,6 +26,8 @@ public class PlayerAimState : PlayerBaseState {
 
     public override void EnterState() {
         player.Inputs.Player.Aim.canceled += SwitchToNormal;
+        
+        player.ToggleLaser.RaiseEvent(true);
 
         _aimCoroutine = AnimateAim(1, 0.25f);
         player.StartCoroutine(_aimCoroutine);
@@ -38,6 +37,8 @@ public class PlayerAimState : PlayerBaseState {
     public override void ExitState() {
         player.Inputs.Player.Aim.canceled -= SwitchToNormal;
         
+        player.ToggleLaser.RaiseEvent(false);
+        
         player.StopCoroutine(_aimCoroutine);
         _aimCoroutine = AnimateAim(0, 0.25f);
         player.StartCoroutine(_aimCoroutine);
@@ -45,7 +46,7 @@ public class PlayerAimState : PlayerBaseState {
     
     
     private void SwitchToNormal(InputAction.CallbackContext obj) {
-        player.SwitchState(player.normalState);
+        player.SwitchState(player.NormalState);
     }
     
     private (bool, Vector3) GetWorldMousePos() {
